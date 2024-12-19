@@ -3,5 +3,5 @@
 
 int main()
 {
-	std::cout << BitcoinExchange::getDB() << "\n";
+	BitcoinExchange::getDB();
 }

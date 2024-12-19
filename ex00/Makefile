@@ -1,6 +1,6 @@
-NAME = easyfind
+NAME = btc
 
-CC = g++
+CC = c++
 MAND = main.cpp BitcoinExchange.cpp
 MAND_OBJS = $(MAND:%.cpp=%.o)
 FLAGS = -std=c++98 -Wall -Werror -Wextra #-g -fsanitize=address
