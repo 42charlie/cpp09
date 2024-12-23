@@ -151,8 +151,8 @@ int BitcoinExchange::Exchange(const char *infilename)
 	infile.open(infilename);
 	if (infile.is_open() == false)
 	{
-		std::cout << "Error opening file.\n";
-		return (-1);
+		std::cout << "Error: could not open file.\n";
+		return (1);
 	}
 	getline(infile, line);
 	while (infile.eof() == false)
@@ -182,5 +182,5 @@ int BitcoinExchange::Exchange(const char *infilename)
 		bound = getbound(timestamp);
 		std::cout << tmTodate(timestamp) << " => " << value << " = " << bound->second * value << "\n";
 	}
-	return (1);
+	return (0);
 }
