@@ -1,4 +1,3 @@
-#include <iostream>
 #include "RPN.hpp"
 
 int main(int arc, char **arg)

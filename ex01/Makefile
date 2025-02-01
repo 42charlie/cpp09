@@ -3,7 +3,7 @@ NAME = RPN
 CC = c++
 MAND = main.cpp RPN.cpp
 MAND_OBJS = $(MAND:%.cpp=%.o)
-FLAGS = -std=c++98 -Wall -Werror -Wextra #-g -fsanitize=address
+FLAGS = -std=c++98 -Wall -Werror -Wextra -g -fsanitize=address
 
 all : $(NAME)
 
