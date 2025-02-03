@@ -15,8 +15,9 @@ class RPN{
 		RPN &operator=(const RPN &copy);
 		~RPN(void);
 	public:
-		static int	calculate(char *line);
-		static void	exec(char operation);
+		static int	processRPNLine(char *line);
+		static void	executeOperation(char operation);
+		static void	setNumbers(int *nbr1, int *nbr2);
 };
 
 #endif
