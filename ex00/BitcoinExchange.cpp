@@ -1,13 +1,12 @@
 #include "BitcoinExchange.hpp"
-#include <algorithm>
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <string>
-#include <ctime>
 
 std::map<long, float> BitcoinExchange::data;
 
+/**
+ * @brief get the timestamp(time_t) from the date(string) given
+ * @param date date to get timestamp from
+ * @return given date converted to timestamp
+ */
 time_t BitcoinExchange::gettm(std::string date)
 {
 	std::tm tm;
@@ -49,6 +48,11 @@ time_t BitcoinExchange::gettm(std::string date)
 	return (std::mktime(&tm));
 }
 
+/**
+ * @brief convert timestamp to date and return it.
+ * @param timestamp the timestamp to convert
+ * @return the date [Year-Month-Day] as char*
+ */
 std::string BitcoinExchange::tmTodate(time_t timestamp)
 {
 	char date[25];
@@ -69,95 +73,110 @@ float BitcoinExchange::getValue(std::string value)
 	ss >> _value;
 	return (_value);
 }
-
+/**
+ * @brief set the timestamp and return value from the line given
+ * @param line line that contain the timestamp and the value
+ * @param delimter ',' or '|' the delimiter that separate timestamp and value.
+ * @param timestamp pointer to the timestamp to set
+ * @return return the value correspondant to the timestamp
+ */
 float	BitcoinExchange::parseLine(std::string line, char delimiter, time_t *timestamp)
 {
-	float		value;
+	float				value;
+	std::stringstream	ss;
 
-	std::stringstream ss;
+	//throw exception if there is more or less that one delimiter in the line.
 	if (std::count(line.begin(), line.end(), delimiter) != 1)
 		throw std::invalid_argument("Error: bad input => " + line);
+
+	//get the timestamp(set) : value(return) pair from database or input file.
 	ss.str(line);
 	getline(ss, line, delimiter);
 	*timestamp = gettm(line);
 	getline(ss, line);
 	value = getValue(line);
-	if (*timestamp == -1)
+
+	//throw exception if there is any errors.
+	if (delimiter == '|' &&*timestamp == -1)
 		throw std::invalid_argument("Error: bad input => " + line);
+	if (delimiter == '|' && value < 0)
+		throw std::out_of_range("Error: not a positive number.");
+	if (delimiter == '|' && value > 1000)
+		throw std::out_of_range("Error: too large a number.");
 	return (value);
 }
-int BitcoinExchange::getDB(void)
+
+/**
+ * @brief load the .csv database to data map
+ * @return 1 is success -1 if not
+ */
+void BitcoinExchange::getDB(void)
 {
 	time_t timestamp;
 	float value;
 	std::string line;
-	std::ifstream infile;
+	std::ifstream inFile;
 
-	infile.open("data.csv");
-	if (infile.is_open() == false)
+	inFile.open("data.csv");
+	if (inFile.is_open() == false)
+		throw std::runtime_error("Error: cannot open database file.");
+	getline(inFile, line);
+	while (inFile.eof() == false)
 	{
-		std::cout << "Error opening file.\n";
-		return (-1);
-	}
-	getline(infile, line);
-	while (infile.eof() == false)
-	{
-		getline(infile, line);
+		getline(inFile, line);
 		if (line.empty() == true)
 			continue;
 		value = BitcoinExchange::parseLine(line, ',', &timestamp);
 		data[timestamp] = value;
 	}
-	return (1);
 }
-
+/**
+ * @brief get the pair timestamp:value of the given timestamp
+ * @param timestamp the timestamp to search for
+ * @return iterator the pair timestamp:value
+ */
 std::map<time_t, float>::iterator BitcoinExchange::getbound(time_t timestamp)
 {
 	std::map<time_t, float>::iterator lower_bound;
-	std::map<time_t, float>::iterator upper_bound;
 	std::map<time_t, float>::iterator bound;
 
+	//Returns the exact bound if it exists
 	bound = data.find(timestamp);
 	if (bound != data.end())
 		return (bound);
+
+	//search the closest date contained in the DB
+	//--insert the timestamp in the map
 	data[timestamp] = 0;
 	bound = data.find(timestamp);
-	if (bound == data.begin())
-		bound = ++bound;
-	else if (bound == --data.end())
-		bound = --bound;
-	else
-	{
+	if (bound == data.begin()) // if the inserted timestamp is the first the bound is the next
+		lower_bound = ++bound;
+	else // if the inserted timestamp is at the end the bound is the previous
 		lower_bound = --bound;
-		upper_bound = ++(++bound);
-		if (timestamp - lower_bound->first < upper_bound->first - timestamp)
-			bound = lower_bound;
-		else
-			bound = upper_bound;
-	}
-	data.erase(timestamp);
+	data.erase(timestamp); // erase the inserted timestamp from map.
 	return (bound);
 }
 
-
-int BitcoinExchange::Exchange(const char *infilename)
+/**
+ * @brief outputs the value of a certain amount of bitcoin on a certain date.
+ * @inFileName the filename contain some amount of bitcoin
+ * @return 1 on error 0 otherwise
+ */
+void BitcoinExchange::Exchange(const char *inFileName)
 {
-	std::map<time_t, float>::iterator bound;
-	float			value;
-	std::string		line;
-	std::ifstream	infile;
-	time_t			timestamp;
+	float								value;
+	time_t								timestamp;
+	std::string							line;
+	std::ifstream						inFile;
+	std::map<time_t, float>::iterator	bound;
 
-	infile.open(infilename);
-	if (infile.is_open() == false)
+	inFile.open(inFileName);
+	if (inFile.is_open() == false)
+		throw std::runtime_error("Error: cannot open infile.");
+	getline(inFile, line);
+	while (inFile.eof() == false)
 	{
-		std::cout << "Error: could not open file.\n";
-		return (1);
-	}
-	getline(infile, line);
-	while (infile.eof() == false)
-	{
-		getline(infile, line);
+		getline(inFile, line);
 		if (line.empty() == true)
 			continue;
 		try{
@@ -168,19 +187,26 @@ int BitcoinExchange::Exchange(const char *infilename)
 			std::cout << e.what() << "\n";
 			continue;
 		}
-		try{
-			if (value < 0)
-				throw std::out_of_range("Error: not a positive number.");
-			if (value > 1000)
-				throw std::out_of_range("Error: too large a number.");
-		}
-		catch (std::exception &e)
-		{
-			std::cout << e.what() << "\n";
-			continue;
-		}
 		bound = getbound(timestamp);
 		std::cout << tmTodate(timestamp) << " => " << value << " = " << bound->second * value << "\n";
 	}
-	return (0);
+}
+
+//orthodox cononical form
+BitcoinExchange::BitcoinExchange(void)
+{
+	;
+}
+BitcoinExchange::BitcoinExchange(const BitcoinExchange &copy)
+{
+	(void)copy;
+}
+BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &copy)
+{
+	(void)copy;
+	return (*this);
+}
+BitcoinExchange::~BitcoinExchange(void)
+{
+	;
 }

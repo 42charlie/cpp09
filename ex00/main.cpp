@@ -3,11 +3,16 @@
 
 int main(int arc, char **arg)
 {
-	BitcoinExchange::getDB();
-	if (arc < 2)
-		std::cout << "Error: could not open file.\n";
-	else
-		return (BitcoinExchange::Exchange(arg[1]));
-	return (1);
+	try {
+		if (arc < 2)
+			throw std::invalid_argument("Error: invalid argument");
+		BitcoinExchange::getDB();
+		BitcoinExchange::Exchange(arg[1]);
+	} catch (std::exception & e)
+	{
+		std::cout << e.what() << "\n";
+		return (1);
+	}
+	return (0);
 	// BitcoinExchange::showMap();
 }
