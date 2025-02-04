@@ -97,13 +97,16 @@ float	BitcoinExchange::parseLine(std::string line, char delimiter, time_t *times
 	value = getValue(line);
 
 	//throw exception if there is any errors.
-	if (delimiter == '|' &&*timestamp == -1)
-		throw std::invalid_argument("Error: bad input => " + line);
-	if (delimiter == '|' && value < 0)
-		throw std::out_of_range("Error: not a positive number.");
-	if (delimiter == '|' && value > 1000)
-		throw std::out_of_range("Error: too large a number.");
-	return (value);
+	if ( delimiter == '|' )
+	{
+		if ( *timestamp == -1 )
+			throw std::invalid_argument("Error: bad input => " + line);
+		if ( value < 0 )
+			throw std::out_of_range("Error: not a positive number.");
+		if ( value > 1000 )
+			throw std::out_of_range("Error: too large a number.");
+	}
+	return ( value );
 }
 
 /**
@@ -159,7 +162,7 @@ std::map<time_t, float>::iterator BitcoinExchange::getbound(time_t timestamp)
 
 /**
  * @brief outputs the value of a certain amount of bitcoin on a certain date.
- * @inFileName the filename contain some amount of bitcoin
+ * @param inFileName the filename contain some amount of bitcoin
  * @return 1 on error 0 otherwise
  */
 void BitcoinExchange::Exchange(const char *inFileName)
@@ -181,14 +184,12 @@ void BitcoinExchange::Exchange(const char *inFileName)
 			continue;
 		try{
 			value = BitcoinExchange::parseLine(line, '|', &timestamp);
-		}
-		catch (std::exception &e)
+			bound = getbound(timestamp);
+			std::cout << tmTodate(timestamp) << " => " << value << " = " << bound->second * value << "\n";
+		} catch (std::exception &e)
 		{
 			std::cout << e.what() << "\n";
-			continue;
 		}
-		bound = getbound(timestamp);
-		std::cout << tmTodate(timestamp) << " => " << value << " = " << bound->second * value << "\n";
 	}
 }
 
