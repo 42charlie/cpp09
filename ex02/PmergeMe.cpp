@@ -25,20 +25,31 @@ void PmergeMe::getSequence(char **args)
 	}
 }
 
+bool compPairs(const std::pair<int, int> &firstPair, const std::pair<int, int> &secondPair)
+{
+	if ( firstPair.second < secondPair.second )
+		return true;
+	return false;
+}
+
 /**
  * @brief convert the unsortedSequence to pairs
  */
 void PmergeMe::pairElements()
 {
+	int					tmpSecond;
 	std::pair<int, int>	tmpPair;
 
 	for ( unsigned int i = 0; i < unsortedSequence.size(); i+=2 )
 	{
-		tmpPair.first = unsortedSequence[i];
-		if ( i + 1 < unsortedSequence.size())
-			tmpPair.second = unsortedSequence[i + 1];
+		if ( i + 1 < unsortedSequence.size() )
+			tmpSecond = unsortedSequence[i + 1];
 		else
-			tmpPair.second = -1;
+			tmpSecond = -1;
+		tmpPair.first = std::min(unsortedSequence[i], tmpSecond);
+		tmpPair.second = std::max(unsortedSequence[i], tmpSecond);
 		pairs.push_back(tmpPair);
 	}
+	std::sort(pairs.begin(), pairs.end(), compPairs);
 }
+
