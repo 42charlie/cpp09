@@ -12,13 +12,13 @@ void PmergeMe::getSequence(char **args)
 	int		number;
 	char	*delimiter;
 
-	if ( *(++args) == NULL || **args == '\0')
+	if ( *(++args) == NULL || **args == '\0' )
 		throw std::invalid_argument("Error : Invalid argument !");
 
 	for ( int i = 0; args[i] != NULL; i++ )
 	{
 		number = std::strtod(args[i], &delimiter);
-		if ( *delimiter != '\0' || number < 0 || std::string(args[i]).find('.') != std::string::npos)
+		if ( *delimiter != '\0' || number < 0 || std::strchr(args[i], '.') != NULL )
 			throw std::invalid_argument("Error : Invalid argument !");
 		unsortedSequence.push_back(number);
 	}

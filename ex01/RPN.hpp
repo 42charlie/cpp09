@@ -1,5 +1,7 @@
 #include <iostream>
 #include <sstream>
+#include <cstdlib> //for strtod
+#include <cstring> //for strchr
 #include <string>
 #include <stack>
 
@@ -18,6 +20,7 @@ class RPN{
 		static int	processRPNLine(char *line);
 		static void	executeOperation(char operation);
 		static void	setNumbers(int *nbr1, int *nbr2);
+		static void insertNumber(std::string &_char);
 };
 
 #endif

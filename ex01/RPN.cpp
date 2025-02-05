@@ -4,23 +4,32 @@ std::stack<int> RPN::stack;
 
 int RPN::processRPNLine(char *line)
 {
-	std::string _char;
-	std::stringstream ss(line);
+	std::string			_char;
+	std::stringstream	ss(line);
 
 	while (ss.eof() == false)
 	{
 		getline(ss, _char, ' ');
-		if (_char.size() != 1)
-			throw std::invalid_argument("Error");
-		else if (isdigit(_char[0]))
-			stack.push(_char[0] - 48);
-		else
+		if ( _char.size() == 1 && std::strchr("+*-/", _char[0]) != NULL )
 			executeOperation(_char[0]);
+		else
+			insertNumber(_char);
 	}
 	if (stack.size() != 1)
 		throw std::invalid_argument("Error");
-	std::cout << stack.top() << "\n";
-	return (0);
+	return (stack.top());
+}
+
+void RPN::insertNumber(std::string &_char)
+{
+	int					number;
+	char				*delimiter;
+
+	number = std::strtod(_char.c_str() , &delimiter);
+	if ( *delimiter != '\0' || labs(number) >= 10 || _char.find('.') != std::string::npos )
+		throw std::invalid_argument("Error: Invalid number format. Expected a valid integer value");
+	else
+		stack.push(number);
 }
 
 void RPN::executeOperation(char operation)
@@ -44,9 +53,6 @@ void RPN::executeOperation(char operation)
 			if (nbr2 == 0)
 				throw std::runtime_error("Error : Division by zero!");
 			stack.push(nbr1 / nbr2);
-			break;
-		default:
-			throw std::invalid_argument("Error");
 	}
 }
 

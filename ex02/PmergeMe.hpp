@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <vector>
 #include <cstdlib> //for strtod
+#include <cstring> //for strchr
 
 class PmergeMe{
 	private :
