@@ -5,11 +5,13 @@ int main(int arc, char **args)
 	(void) arc;
 	try {
 		PmergeMe::getSequence(args);
-		PmergeMe::show_seq();
+		PmergeMe::pairElements();
+		// PmergeMe::show_seq();
+		PmergeMe::show_pair();
 	} catch (std::exception & e)
 	{
 		std::cerr << e.what() << "\n";
 		return 1;
 	}
-		return (0);
+	return (0);
 }
