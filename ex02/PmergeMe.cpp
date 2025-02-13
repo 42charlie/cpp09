@@ -3,6 +3,7 @@
 double PmergeMe::timeVectorSort;
 timeval PmergeMe::start;
 std::vector<int> PmergeMe::unsortedSequence;
+std::vector<int> PmergeMe::jacobSeq;
 std::vector<int> PmergeMe::sortedSequence;
 std::vector<std::pair<int, int> > PmergeMe::pairs;
 
@@ -57,49 +58,57 @@ void PmergeMe::pairElements()
 	}
 	std::sort(pairs.begin(), pairs.end(), compPairs);
 }
+
+int PmergeMe::getJacob(unsigned int index)
+{
+	if ( index < jacobSeq.size() )
+		return jacobSeq[index];
+	return (getJacob(index - 1) + 2 * getJacob(index - 2));
+}
+
 /**
  * @brief generate a Jacobsthal sequence
  * @param upto the length of the Jacob seq
  */
-int PmergeMe::genJacobSeq(int upto)
+void PmergeMe::genJacobSeq(int upto)
 {
-	if (upto == 0 || upto == 1)
-		return (upto);
-	return (genJacobSeq(upto - 1) + 2 * genJacobSeq(upto - 2));
+	int _new;
+
+	jacobSeq.push_back(0);
+	jacobSeq.push_back(1);
+	for (int i = 0; i < upto; i++)
+	{
+		_new = getJacob(i);
+		jacobSeq.push_back(_new);
+	}
 }
 
-/**
- * @brief create the main chain "sortedSequence" and insert the samller elements
- */
-void PmergeMe::createAndInsertMainChain()
+void PmergeMe::createMainChain()
 {
-	int		jacobNbr;
-	int		index;
-	int 	sorted_len;
-	timeval	end;
-
 	for ( std::vector<std::pair<int, int> >::iterator it = pairs.begin(); it != pairs.end(); it++ )
 	{
 		sortedSequence.push_back(it->second);
 	}
+}
+void PmergeMe::InsertMainChain()
+{
+	int		jacobNbr;
+	int 	sorted_len;
+	int 	unsorted_len;
+	timeval	end;
 
 	sorted_len = sortedSequence.size();
-	if ( unsortedSequence.size() % 2 != 0 )
-		index = sorted_len - 1;
-	else
-		index = sorted_len;
+	unsorted_len = sorted_len - (unsortedSequence.size() % 2);
+	genJacobSeq(unsorted_len);
 
 	for ( std::vector<std::pair<int, int> >::iterator it = pairs.begin(); it != pairs.end(); it++ )
 	{
 		if ( it->first == -1 )
 			continue ;
-		jacobNbr = genJacobSeq(index--);
-		// std::cout << " inserting " << it->first << " at " << jacobNbr % sorted_len;
-		binaryInsertion(it->first, jacobNbr % sorted_len);
+		jacobNbr = jacobSeq[unsorted_len] % sorted_len;
+		binaryInsertion(it->first, jacobNbr);
+		unsorted_len--;
 		sorted_len++;
-		// std::cout << "\n SortedSequence : ";
-		// printContainer(sortedSequence.begin(), sortedSequence.end());
-		// std::cout << "\n-------------\n";
 	}
 	gettimeofday(&end, NULL);
 	timeVectorSort = end.tv_usec - start.tv_usec;

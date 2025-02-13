@@ -6,7 +6,8 @@ int main(int arc, char **args)
 	try {
 		PmergeMe::getSequence(args);
 		PmergeMe::pairElements();
-		PmergeMe::createAndInsertMainChain();
+		PmergeMe::createMainChain();
+		PmergeMe::InsertMainChain();
 		PmergeMe::showStats();
 	} catch (std::exception & e)
 	{
