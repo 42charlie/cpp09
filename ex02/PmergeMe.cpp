@@ -57,12 +57,25 @@ void PmergeMe::pairElements()
 	}
 	std::sort(pairs.begin(), pairs.end(), compPairs);
 }
+/**
+ * @brief generate a Jacobsthal sequence
+ * @param upto the length of the Jacob seq
+ */
+int PmergeMe::genJacobSeq(int upto)
+{
+	if (upto == 0 || upto == 1)
+		return (upto);
+	return (genJacobSeq(upto - 1) + 2 * genJacobSeq(upto - 2));
+}
 
 /**
  * @brief create the main chain "sortedSequence" and insert the samller elements
  */
 void PmergeMe::createAndInsertMainChain()
 {
+	int		jacobNbr;
+	int		index;
+	int 	sorted_len;
 	timeval	end;
 
 	for ( std::vector<std::pair<int, int> >::iterator it = pairs.begin(); it != pairs.end(); it++ )
@@ -70,11 +83,23 @@ void PmergeMe::createAndInsertMainChain()
 		sortedSequence.push_back(it->second);
 	}
 
+	sorted_len = sortedSequence.size();
+	if ( unsortedSequence.size() % 2 != 0 )
+		index = sorted_len - 1;
+	else
+		index = sorted_len;
+
 	for ( std::vector<std::pair<int, int> >::iterator it = pairs.begin(); it != pairs.end(); it++ )
 	{
 		if ( it->first == -1 )
 			continue ;
-		binaryInsertion(it->first);
+		jacobNbr = genJacobSeq(index--);
+		// std::cout << " inserting " << it->first << " at " << jacobNbr % sorted_len;
+		binaryInsertion(it->first, jacobNbr % sorted_len);
+		sorted_len++;
+		// std::cout << "\n SortedSequence : ";
+		// printContainer(sortedSequence.begin(), sortedSequence.end());
+		// std::cout << "\n-------------\n";
 	}
 	gettimeofday(&end, NULL);
 	timeVectorSort = end.tv_usec - start.tv_usec;
@@ -83,22 +108,23 @@ void PmergeMe::createAndInsertMainChain()
 /**
  * @brief insert a number in a sorted container using binary insertion
  * @param number number to insert
+ * @param index index to start comparing
  */
-void PmergeMe::binaryInsertion(int number)
+void PmergeMe::binaryInsertion(int number, int index)
 {
 	unsigned int left = 0;
 	unsigned int right = sortedSequence.size();
-	unsigned int mid;
+	unsigned int mid = index;
 
 	while ( left < right )
 	{
-		mid = left + (right - left) / 2;
 		if ( sortedSequence[mid] < number )
 			left++;
 		else if ( sortedSequence[mid] > number )
 			right--;
 		else
 			break;
+		mid = left + (right - left) / 2;
 	}
 	sortedSequence.insert(sortedSequence.begin() + left, number);
 }

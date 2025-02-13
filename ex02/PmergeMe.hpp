@@ -21,8 +21,9 @@ class PmergeMe{
 		static void getSequence(char **args);
 		static void pairElements();
 		static void createAndInsertMainChain();
-		static void binaryInsertion(int number);
+		static void binaryInsertion(int number, int index);
 		static void showStats();
+		static int	genJacobSeq(int upto);
 		static void printContainer(std::vector<int>::iterator begin, std::vector<int>::iterator end);
 
 		static void show_pair()						{ for (std::vector<std::pair<int, int> >::iterator it = pairs.begin(); it != pairs.end(); it++) { std::cout << "[ " << it->first << ", " << it->second << " ]" << "\n";}; };
