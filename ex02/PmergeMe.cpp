@@ -88,8 +88,11 @@ void PmergeMe::createMainChain()
 	for ( std::vector<std::pair<int, int> >::iterator it = pairs.begin(); it != pairs.end(); it++ )
 	{
 		sortedSequence.push_back(it->second);
+		if ( it->first == -1)
+			pairs.erase(it);
 	}
 }
+
 void PmergeMe::InsertMainChain()
 {
 	int		jacobNbr;
@@ -98,13 +101,11 @@ void PmergeMe::InsertMainChain()
 	timeval	end;
 
 	sorted_len = sortedSequence.size();
-	unsorted_len = sorted_len - (unsortedSequence.size() % 2);
+	unsorted_len = sortedSequence.size() - (unsortedSequence.size() % 2);
 	genJacobSeq(unsorted_len);
 
 	for ( std::vector<std::pair<int, int> >::iterator it = pairs.begin(); it != pairs.end(); it++ )
 	{
-		if ( it->first == -1 )
-			continue ;
 		jacobNbr = jacobSeq[unsorted_len] % sorted_len;
 		binaryInsertion(it->first, jacobNbr);
 		unsorted_len--;
@@ -119,6 +120,9 @@ void PmergeMe::InsertMainChain()
  * @param number number to insert
  * @param index index to start comparing
  */
+//comp : 3374250
+//comp : 3374250
+int comp = 0;
 void PmergeMe::binaryInsertion(int number, int index)
 {
 	unsigned int left = 0;
@@ -157,4 +161,5 @@ void PmergeMe::showStats()
 	std::cout << "\n";
 	std::cout << "Time to process a range of " << unsortedSequence.size() << " elements with std::vector : " << timeVectorSort << " us\n";
 	std::cout << "Time to process a range of " << unsortedSequence.size() << " elements with std::vector : " << timeVectorSort << " us\n";
+	std::cout << "comp is : " << comp << "\n";
 }

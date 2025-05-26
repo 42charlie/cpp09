@@ -4,7 +4,7 @@
 int main(int arc, char **arg)
 {
 	try {
-		if (arc < 2)
+		if (arc != 2)
 			throw std::invalid_argument("Error: invalid argument");
 		BitcoinExchange::getDB();
 		BitcoinExchange::Exchange(arg[1]);
