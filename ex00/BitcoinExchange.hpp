@@ -5,13 +5,14 @@
 #include <string>
 #include <ctime>
 #include <map>
+#include "DateKey.hpp"
 
 #ifndef BEXCH_
 #define BEXCH_
 
 class BitcoinExchange{
 	private :
-		static std::map<time_t, float>				data;
+		static std::map<DateKey, float>				data;
 		BitcoinExchange(void);
 		BitcoinExchange(const BitcoinExchange &copy);
 		BitcoinExchange &operator=(const BitcoinExchange &copy);
@@ -19,11 +20,10 @@ class BitcoinExchange{
 	public :
 		static void									getDB(void);
 		static void									Exchange(const char *infilname);
-		static float								parseLine(std::string line, char delimiter, time_t *key);
-		static time_t								gettm(std::string date);
+		static float								parseLine(std::string line, char delimiter, DateKey *key);
+		static DateKey									getDateKey(std::string date);
 		static float								getValue(std::string value);
-		static std::map<time_t, float>::iterator	getbound(time_t timestamp);
-		static std::string							tmTodate(time_t timestamp);
+		static std::map<DateKey, float>::iterator		getbound(DateKey date);
 		// static void			showMap(){
 		// 	std::cout << "===== Map =====\n";
 		// 	for (std::map<time_t, float>::iterator it = BitcoinExchange::data.begin(); it != BitcoinExchange::data.end(); it++)
