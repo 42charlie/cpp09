@@ -14,8 +14,8 @@ DateKey BitcoinExchange::getDateKey(std::string dateLine)
 
 float BitcoinExchange::getValue(std::string valueLine)
 {
-	float value;
-	std::stringstream ss;
+	std::stringstream	ss;
+	float				value;
 
 	ss.str(valueLine);
 	ss >> value;
@@ -42,7 +42,7 @@ float	BitcoinExchange::parseLine(std::string line, char delimiter, DateKey *date
 	if ( delimiter == '|' )
 	{
 		if ( date->getIsValidYear() == false )
-			throw std::invalid_argument("Error: bad input => " + line);
+			throw std::invalid_argument("Error: bad input => " + date->getFullDate());
 		if ( value < 0 )
 			throw std::out_of_range("Error: not a positive number.");
 		if ( value > 1000 )
@@ -53,10 +53,10 @@ float	BitcoinExchange::parseLine(std::string line, char delimiter, DateKey *date
 
 void BitcoinExchange::getDB(void)
 {
-	DateKey date;
-	float value;
-	std::string line;
-	std::ifstream inFile;
+	DateKey			date;
+	std::string		line;
+	float			value;
+	std::ifstream	inFile;
 
 	inFile.open("data.csv");
 	if (inFile.is_open() == false)
@@ -74,8 +74,8 @@ void BitcoinExchange::getDB(void)
 
 std::map<DateKey, float>::iterator BitcoinExchange::getbound(DateKey date)
 {
-	std::map<DateKey, float>::iterator lower_bound;
 	std::map<DateKey, float>::iterator bound;
+	std::map<DateKey, float>::iterator lower_bound;
 
 	//Returns the exact bound if it exists
 	bound = data.find(date);
@@ -96,11 +96,11 @@ std::map<DateKey, float>::iterator BitcoinExchange::getbound(DateKey date)
 
 void BitcoinExchange::Exchange(const char *inFileName)
 {
-	DateKey 								date;
-	float								value;
 	std::string							line;
+	DateKey 							date;
+	std::map<DateKey, float>::iterator	bound;
+	float								value;
 	std::ifstream						inFile;
-	std::map<DateKey, float>::iterator		bound;
 
 	inFile.open(inFileName);
 	if (inFile.is_open() == false)
@@ -123,10 +123,7 @@ void BitcoinExchange::Exchange(const char *inFileName)
 }
 
 //orthodox cononical form
-BitcoinExchange::BitcoinExchange(void)
-{
-	;
-}
+BitcoinExchange::BitcoinExchange(void) {}
 BitcoinExchange::BitcoinExchange(const BitcoinExchange &copy)
 {
 	(void)copy;
@@ -136,7 +133,4 @@ BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &copy)
 	(void)copy;
 	return (*this);
 }
-BitcoinExchange::~BitcoinExchange(void)
-{
-	;
-}
+BitcoinExchange::~BitcoinExchange(void) {}

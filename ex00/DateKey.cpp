@@ -73,21 +73,21 @@ DateKey::DateKey(int _year, int _month, int _day, std::string _fulldate) :
 	isValidDateKey = true;
 
 	//check year
-	if (year < 0 || year > 9999)
+	if (year <= 0 || year > 9999)
 		isValidDateKey = false;
 	
 	//check if it's a leap year
-	if (year % 400 == 0 || (year % 4 == 0 && year % 100 == 1))
+	if (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0))
 		isLeapYear = true;
 	else
 		isLeapYear = false;
 	
 	//check month
-	if (month < 0 || month > 12)
+	if (month <= 0 || month > 12)
 		isValidDateKey = false;
 	
 	//check day
-	if (day < 0 || day > daysInMonth[month - 1] + (isLeapYear && month == 1))
+	if (day <= 0 || day > (daysInMonth[month - 1] + (isLeapYear && month == 2)))
 		isValidDateKey = false;
 
 }
