@@ -19,13 +19,13 @@ void PmergeMe::getSequence(char **args)
 	char	*delimiter;
 
 	gettimeofday(&start, NULL);
-	if ( *(++args) == NULL || **args == '\0' )
+	if ( *(++args) == NULL )
 		throw std::invalid_argument("Error : Invalid argument !");
 
 	for ( int i = 0; args[i] != NULL; i++ )
 	{
 		number = std::strtod(args[i], &delimiter);
-		if ( *delimiter != '\0' || number < 0 || std::strchr(args[i], '.') != NULL )
+		if ( args[i][0] == '\0' || *delimiter != '\0' || number < 0 || std::strchr(args[i], '.') != NULL )
 			throw std::invalid_argument("Error : Invalid argument !");
 		unsortedSequence.push_back(number);
 	}
