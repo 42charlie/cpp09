@@ -112,7 +112,7 @@ void PmergeMe::InsertMainChain()
 		sorted_len++;
 	}
 	gettimeofday(&end, NULL);
-	timeVectorSort = end.tv_usec - start.tv_usec;
+	timeVectorSort = (end.tv_sec - start.tv_sec) * 1000000 + end.tv_usec - start.tv_usec;
 }
 
 /**
