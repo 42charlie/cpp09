@@ -23,6 +23,7 @@ class PmergeMe{
 		static void				getSequence(char **args);
 		static void 			pairElements();
 		static std::vector<int>	fordjohnsonsort(std::vector<int> unsorted);
+		static std::vector<int> genJacobSeq(int n);
 		// static std::vector<int>	genJacobSeq(int upto);
 		// static std::vector<int>	genInsertionOrder(int k);
 		static void				insertSequence(std::vector<int> &smallerSequence, std::vector<int> &largerSequence);

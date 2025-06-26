@@ -61,12 +61,6 @@ void PmergeMe::pairElements()
 		smallerElements.push_back(Pair.first);
 		largerElements.push_back(Pair.second);
 	}
-	// std::cout << "\n unsortedSequence : ";
-	// printContainer(unsortedSequence);
-	// std::cout << "\n smallerElements : ";
-	// printContainer(smallerElements);
-	// std::cout << "\n largerElements : ";
-	// printContainer(largerElements);
 
 }
 
@@ -80,10 +74,9 @@ std::vector<int> PmergeMe::fordjohnsonsort(std::vector<int> largerSequence)
 	if ( largerSequence.size() == 2 && largerSequence[0] > largerSequence[1] )
 	std::swap(largerSequence[0], largerSequence[1]);
 	
-	if ( largerSequence.size() <= 2 ) {
-		return largerSequence;
-	}
- 
+	if ( largerSequence.size() <= 2 )
+	return largerSequence;
+	
 	//split larger and smaller elements.
 	for ( unsigned int i = 0; i < largerSequence.size(); i+=2 )
 	{
@@ -94,10 +87,15 @@ std::vector<int> PmergeMe::fordjohnsonsort(std::vector<int> largerSequence)
 		smaller_elements.push_back(std::min(largerSequence[i], largerSequence[i + 1]));
 		larger_elements.push_back(std::max(largerSequence[i], largerSequence[i + 1]));
 	}
-
+	
 	larger_elements = fordjohnsonsort(larger_elements);
-
+	
 	insertUnpaired(_unpaired, larger_elements);
+	// std::cout << "\nsmaller_elements : ";
+	// printContainer(smaller_elements);
+	// std::cout << "\nlarger_elements : ";
+	// printContainer(larger_elements);
+
 	insertSequence(smaller_elements, larger_elements);
 	return larger_elements;
 }
@@ -105,7 +103,7 @@ void PmergeMe::insertUnpaired(int &_unpaired, std::vector<int> &largerSequence)
 {
 	if (_unpaired != -1)
 	{
-		std::cout << "the _unpaired number is :" << _unpaired << "\n";
+		std::cout << "\nunpaired number :" << _unpaired << "\n";
 		std::vector<int>::iterator position = std::lower_bound(largerSequence.begin(), largerSequence.end(), _unpaired);
 		largerSequence.insert(position, _unpaired);
 		_unpaired = -1;
@@ -115,52 +113,55 @@ void PmergeMe::insertUnpaired(int &_unpaired, std::vector<int> &largerSequence)
 
 void PmergeMe::insertSequence(std::vector<int> &smallerSequence, std::vector<int> &largerSequence)
 {
-	//inserting the smaller elements using jacob sequence
-	// std::vector<int> insertionOrder = genInsertionOrder(smallerSequence.size());
+	std::vector<int> jacob = genJacobSeq(smallerSequence.size());
+	std::vector<bool> inserted(smallerSequence.size(), false);
 
-	for (std::vector<int>::iterator it = smallerSequence.begin(); it != smallerSequence.end(); it++)
+	// Insert Jacobsthal-indexed elements
+	for (std::vector<int>::iterator it = jacob.begin(); it != jacob.end(); ++it)
 	{
-		int element = *it;
-		std::vector<int>::iterator index = std::lower_bound(largerSequence.begin(), largerSequence.end(), element);
-		largerSequence.insert(index, element);
+		int index = *it;
+		if (index >= (int)smallerSequence.size())
+			continue;
+		int element = smallerSequence[index];
+		std::vector<int>::iterator pos = std::lower_bound(largerSequence.begin(), largerSequence.end(), element);
+		// std::cout << "1-inserting " << element << " at " << largerSequence.end() - pos << "\n";
+		largerSequence.insert(pos, element);
+		inserted[index] = true;
+	}
+
+	// Insert remaining elements
+	for (size_t i = 0; i < smallerSequence.size(); ++i)
+	{
+		if (inserted[i])
+			continue;
+		int element = smallerSequence[i];
+		std::vector<int>::iterator pos = std::lower_bound(largerSequence.begin(), largerSequence.end(), element);
+		// std::cout << "2-inserting " << element << " at " << largerSequence.end() - pos << "\n";
+		largerSequence.insert(pos, element);
 	}
 }
 
-// std::vector<int> PmergeMe::genJacobSeq(int upto)
-// {
-// 	std::vector<int> sequence;
 
-// 	sequence.push_back(0);
-// 	sequence.push_back(1);
-//     while (sequence.back() <= upto)
-// 	{
-//         int next = sequence.back() + 2 * sequence[sequence.size()-2];
-//         sequence.push_back(next);
-//     }
-// 	return sequence;
-// }
 
-// std::vector<int> PmergeMe::genInsertionOrder(int k)
-// {
-//     std::vector<int> order;
-//     std::vector<int> jacobSeq = genJacobSeq(k);
-    
-//     // Start from largest Jacobsthal number ≤ k
-//     int i = jacobSeq.size() - 1;
-//     while (jacobSeq[i] > k) i--;
-    
-//     // Work backwards through gaps
-//     while (i > 0) {
-//         int gap = jacobSeq[i] - jacobSeq[i - 1];
-//         if (gap > 0) {
-//             for (int j = jacobSeq[i]; j > jacobSeq[i-1]; j--) {
-//                 if (j <= k) order.push_back(j);
-//             }
-//         }
-//         i--;
-//     }
-//     return order;
-// }
+std::vector<int> PmergeMe::genJacobSeq(int n)
+{
+    std::vector<int> sequence;
+    int j0 = 0;
+    int j1 = 1;
+    if (n <= 0)
+        return sequence;
+    sequence.push_back(j1);
+    while (true) {
+        int next = j1 + 2 * j0;
+        if (next >= n)
+            break;
+		if( std::find(sequence.begin(), sequence.end(), next) == sequence.end())
+        	sequence.push_back(next);
+        j0 = j1;
+        j1 = next;
+    }
+    return sequence;
+}
 
 void PmergeMe::stopChrono()
 {

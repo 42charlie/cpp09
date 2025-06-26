@@ -16,6 +16,10 @@ int main(int argc, char **argv) {
         PmergeMe::pairElements();
         PmergeMe::largerElements = PmergeMe::fordjohnsonsort(PmergeMe::largerElements);
         PmergeMe::insertUnpaired(PmergeMe::unpaired, PmergeMe::largerElements);
+        // std::cout << "\n*smaller_elements : ";
+	    // PmergeMe::printContainer(PmergeMe::smallerElements);
+	    // std::cout << "\n*larger_elements : ";
+	    // PmergeMe::printContainer(PmergeMe::largerElements);
         PmergeMe::insertSequence(PmergeMe::smallerElements, PmergeMe::largerElements);
         PmergeMe::stopChrono();
 
