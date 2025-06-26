@@ -11,11 +11,9 @@
 
 class PmergeMe{
 	private :
-		static std::vector<int>						unsortedSequence;
-		static std::vector<int>						sortedSequence;
-		static std::vector<std::pair<int, int> >	pairs;
-		static double								timeVectorSort;
 		static timeval								start;
+		static double								timeVectorSort;
+		static std::vector<int>						unsortedSequence;
 	public :
 		static int									unpaired;
 		static std::vector<int>						largerElements;
@@ -24,18 +22,11 @@ class PmergeMe{
 		static void 			pairElements();
 		static std::vector<int>	fordjohnsonsort(std::vector<int> unsorted);
 		static std::vector<int> genJacobSeq(int n);
-		// static std::vector<int>	genJacobSeq(int upto);
-		// static std::vector<int>	genInsertionOrder(int k);
 		static void				insertSequence(std::vector<int> &smallerSequence, std::vector<int> &largerSequence);
 		static void 			insertUnpaired(int &unpaired, std::vector<int> &largerSequence);
-		// static std::vector<int> getLargerelements() { return largerElements; }
-		// static std::vector<int> getSmallerelements() { return smallerElements; }
-		// static std::vector<int> getUnsortedSequence() { return unsortedSequence; }
 		static void				stopChrono();
 		static void				showStats();
 		static void				printContainer(std::vector<int> v);
-
-		static void				show_pair()						{ for (std::vector<std::pair<int, int> >::iterator it = pairs.begin(); it != pairs.end(); it++) { std::cout << "[ " << it->first << ", " << it->second << " ]" << "\n";}; };
 };
 
 #endif

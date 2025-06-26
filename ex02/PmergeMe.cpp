@@ -6,13 +6,7 @@ std::vector<int>	PmergeMe::unsortedSequence;
 std::vector<int>	PmergeMe::smallerElements;
 std::vector<int>	PmergeMe::largerElements;
 int					PmergeMe::unpaired;
-std::vector<std::pair<int, int> > PmergeMe::pairs;
 
-/**
- * @brief Get the int sequence from the args and store it in PmergeMe::unsortedSequence
- * @param args(char**) arguments list passed to program
- * @return None, it set the unsortedSequence vector instead.
- */
 void PmergeMe::getSequence(char **args)
 {
 
@@ -39,9 +33,6 @@ bool compPairs(const std::pair<int, int> &firstPair, const std::pair<int, int> &
 	return false;
 }
 
-/**
- * @brief convert the unsortedSequence to pairs
- */
 void PmergeMe::pairElements()
 {
 	std::pair<int, int>	Pair;
@@ -66,16 +57,15 @@ void PmergeMe::pairElements()
 
 std::vector<int> PmergeMe::fordjohnsonsort(std::vector<int> largerSequence)
 {
-	int _unpaired = -1;
+	int					_unpaired = -1;
 	std::vector<int>	smaller_elements;
 	std::vector<int>	larger_elements;
 
-	//Base case
+	//Base case.
 	if ( largerSequence.size() == 2 && largerSequence[0] > largerSequence[1] )
-	std::swap(largerSequence[0], largerSequence[1]);
-	
+		std::swap(largerSequence[0], largerSequence[1]);
 	if ( largerSequence.size() <= 2 )
-	return largerSequence;
+		return largerSequence;
 	
 	//split larger and smaller elements.
 	for ( unsigned int i = 0; i < largerSequence.size(); i+=2 )
@@ -88,22 +78,19 @@ std::vector<int> PmergeMe::fordjohnsonsort(std::vector<int> largerSequence)
 		larger_elements.push_back(std::max(largerSequence[i], largerSequence[i + 1]));
 	}
 	
+	//recursively call the func on larger elements.
 	larger_elements = fordjohnsonsort(larger_elements);
 	
+	//inserting the smaller elements and the unpaired element.
 	insertUnpaired(_unpaired, larger_elements);
-	// std::cout << "\nsmaller_elements : ";
-	// printContainer(smaller_elements);
-	// std::cout << "\nlarger_elements : ";
-	// printContainer(larger_elements);
-
 	insertSequence(smaller_elements, larger_elements);
 	return larger_elements;
 }
+
 void PmergeMe::insertUnpaired(int &_unpaired, std::vector<int> &largerSequence)
 {
 	if (_unpaired != -1)
 	{
-		std::cout << "\nunpaired number :" << _unpaired << "\n";
 		std::vector<int>::iterator position = std::lower_bound(largerSequence.begin(), largerSequence.end(), _unpaired);
 		largerSequence.insert(position, _unpaired);
 		_unpaired = -1;
@@ -124,7 +111,6 @@ void PmergeMe::insertSequence(std::vector<int> &smallerSequence, std::vector<int
 			continue;
 		int element = smallerSequence[index];
 		std::vector<int>::iterator pos = std::lower_bound(largerSequence.begin(), largerSequence.end(), element);
-		// std::cout << "1-inserting " << element << " at " << largerSequence.end() - pos << "\n";
 		largerSequence.insert(pos, element);
 		inserted[index] = true;
 	}
@@ -136,7 +122,6 @@ void PmergeMe::insertSequence(std::vector<int> &smallerSequence, std::vector<int
 			continue;
 		int element = smallerSequence[i];
 		std::vector<int>::iterator pos = std::lower_bound(largerSequence.begin(), largerSequence.end(), element);
-		// std::cout << "2-inserting " << element << " at " << largerSequence.end() - pos << "\n";
 		largerSequence.insert(pos, element);
 	}
 }
@@ -168,7 +153,7 @@ void PmergeMe::stopChrono()
 	struct timeval end;
 
 	gettimeofday(&end, NULL);
-	timeVectorSort = (end.tv_sec - start.tv_sec) * 1000000 + end.tv_usec - start.tv_usec;
+	timeVectorSort = (end.tv_sec - start.tv_sec) * 1000000.0 + end.tv_usec - start.tv_usec;
 }
 
 void PmergeMe::printContainer(std::vector<int> v)

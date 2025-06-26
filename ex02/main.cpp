@@ -9,23 +9,14 @@ int main(int argc, char **argv) {
     }
 
     try {
-        // Step 1: Parse input
         PmergeMe::getSequence(argv);
-
-        // Step 2: Sort and time the sequence
         PmergeMe::pairElements();
         PmergeMe::largerElements = PmergeMe::fordjohnsonsort(PmergeMe::largerElements);
         PmergeMe::insertUnpaired(PmergeMe::unpaired, PmergeMe::largerElements);
-        // std::cout << "\n*smaller_elements : ";
-	    // PmergeMe::printContainer(PmergeMe::smallerElements);
-	    // std::cout << "\n*larger_elements : ";
-	    // PmergeMe::printContainer(PmergeMe::largerElements);
         PmergeMe::insertSequence(PmergeMe::smallerElements, PmergeMe::largerElements);
         PmergeMe::stopChrono();
-
-        // Step 3: Display results
         PmergeMe::showStats();
-    } 
+    }
     catch (const std::exception& e) {
         std::cerr << e.what() << "\n";
         return 1;
