@@ -15,8 +15,8 @@ int main(int argc, char **argv) {
         // Step 2: Sort and time the sequence
         PmergeMe::pairElements();
         PmergeMe::largerElements = PmergeMe::fordjohnsonsort(PmergeMe::largerElements);
-        PmergeMe::insertUnpairred(PmergeMe::unpaired, PmergeMe::largerElements);
-        PmergeMe::insert(PmergeMe::smallerElements, PmergeMe::largerElements);
+        PmergeMe::insertUnpaired(PmergeMe::unpaired, PmergeMe::largerElements);
+        PmergeMe::insertSequence(PmergeMe::smallerElements, PmergeMe::largerElements);
         PmergeMe::stopChrono();
 
         // Step 3: Display results

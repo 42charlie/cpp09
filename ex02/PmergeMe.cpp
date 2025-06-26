@@ -97,13 +97,11 @@ std::vector<int> PmergeMe::fordjohnsonsort(std::vector<int> largerSequence)
 
 	larger_elements = fordjohnsonsort(larger_elements);
 
-	//inserting the unpair if it's exist
-	insertUnpairred(_unpaired, larger_elements);
-
-	insert(smaller_elements, larger_elements);
+	insertUnpaired(_unpaired, larger_elements);
+	insertSequence(smaller_elements, larger_elements);
 	return larger_elements;
 }
-void PmergeMe::insertUnpairred(int &_unpaired, std::vector<int> &largerSequence)
+void PmergeMe::insertUnpaired(int &_unpaired, std::vector<int> &largerSequence)
 {
 	if (_unpaired != -1)
 	{
@@ -115,7 +113,7 @@ void PmergeMe::insertUnpairred(int &_unpaired, std::vector<int> &largerSequence)
 }
 
 
-void PmergeMe::insert(std::vector<int> &smallerSequence, std::vector<int> &largerSequence)
+void PmergeMe::insertSequence(std::vector<int> &smallerSequence, std::vector<int> &largerSequence)
 {
 	//inserting the smaller elements using jacob sequence
 	// std::vector<int> insertionOrder = genInsertionOrder(smallerSequence.size());

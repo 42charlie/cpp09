@@ -25,10 +25,10 @@ class PmergeMe{
 		static std::vector<int>	fordjohnsonsort(std::vector<int> unsorted);
 		// static std::vector<int>	genJacobSeq(int upto);
 		// static std::vector<int>	genInsertionOrder(int k);
-		static void				insert(std::vector<int> &smallerSequence, std::vector<int> &largerSequence);
-		static void 			insertUnpairred(int &unpaired, std::vector<int> &largerSequence);
-		static std::vector<int> getLargerelements() { return largerElements; }
-		static std::vector<int> getSmallerelements() { return smallerElements; }
+		static void				insertSequence(std::vector<int> &smallerSequence, std::vector<int> &largerSequence);
+		static void 			insertUnpaired(int &unpaired, std::vector<int> &largerSequence);
+		// static std::vector<int> getLargerelements() { return largerElements; }
+		// static std::vector<int> getSmallerelements() { return smallerElements; }
 		// static std::vector<int> getUnsortedSequence() { return unsortedSequence; }
 		static void				stopChrono();
 		static void				showStats();
