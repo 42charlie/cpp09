@@ -12,24 +12,29 @@
 class PmergeMe{
 	private :
 		static std::vector<int>						unsortedSequence;
-		static std::vector<std::pair<int, int> >	pairs;
 		static std::vector<int>						sortedSequence;
-		static std::vector<int>						jacobSeq;
+		static std::vector<std::pair<int, int> >	pairs;
 		static double								timeVectorSort;
-		static double								timeDequeSort;
 		static timeval								start;
 	public :
-		static void getSequence(char **args);
-		static void pairElements();
-		static void createMainChain();
-		static void InsertMainChain();
-		static void binaryInsertion(int number, int index);
-		static void showStats();
-		static void	genJacobSeq(int upto);
-		static int	getJacob(unsigned int index);
-		static void printContainer(std::vector<int>::iterator begin, std::vector<int>::iterator end);
+		static int									unpaired;
+		static std::vector<int>						largerElements;
+		static std::vector<int>						smallerElements;
+		static void				getSequence(char **args);
+		static void 			pairElements();
+		static std::vector<int>	fordjohnsonsort(std::vector<int> unsorted);
+		// static std::vector<int>	genJacobSeq(int upto);
+		// static std::vector<int>	genInsertionOrder(int k);
+		static void				insert(std::vector<int> &smallerSequence, std::vector<int> &largerSequence);
+		static void 			insertUnpairred(int &unpaired, std::vector<int> &largerSequence);
+		static std::vector<int> getLargerelements() { return largerElements; }
+		static std::vector<int> getSmallerelements() { return smallerElements; }
+		// static std::vector<int> getUnsortedSequence() { return unsortedSequence; }
+		static void				stopChrono();
+		static void				showStats();
+		static void				printContainer(std::vector<int> v);
 
-		static void show_pair()						{ for (std::vector<std::pair<int, int> >::iterator it = pairs.begin(); it != pairs.end(); it++) { std::cout << "[ " << it->first << ", " << it->second << " ]" << "\n";}; };
+		static void				show_pair()						{ for (std::vector<std::pair<int, int> >::iterator it = pairs.begin(); it != pairs.end(); it++) { std::cout << "[ " << it->first << ", " << it->second << " ]" << "\n";}; };
 };
 
 #endif
