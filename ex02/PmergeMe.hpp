@@ -4,29 +4,33 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <deque>
 #include <utility>
 #include <cstdlib> //for strtod
 #include <cstring> //for strchr
-#include <sys/time.h> // for gettimeofday
+#include <ctime> //for clock
 
+template <typename T>
 class PmergeMe{
 	private :
-		static timeval								start;
-		static double								timeVectorSort;
-		static std::vector<int>						unsortedSequence;
+		static clock_t	start;
+		static T		unsortedSequence;
 	public :
-		static int									unpaired;
-		static std::vector<int>						largerElements;
-		static std::vector<int>						smallerElements;
-		static void				getSequence(char **args);
-		static void 			pairElements();
-		static std::vector<int>	fordjohnsonsort(std::vector<int> unsorted);
-		static std::vector<int> genJacobSeq(int n);
-		static void				insertSequence(std::vector<int> &smallerSequence, std::vector<int> &largerSequence);
-		static void 			insertUnpaired(int &unpaired, std::vector<int> &largerSequence);
-		static void				stopChrono();
-		static void				showStats();
-		static void				printContainer(std::vector<int> v);
+		static int		unpaired;
+		static T		largerElements;
+		static T		smallerElements;
+		static double	mergeSort(char **argv);
+		static void		getSequence(char **args);
+		static void		pairElements();
+		static T		fordjohnsonsort(T unsorted);
+		static T		genJacobSeq(int n);
+		static void		insertSequence(T &smallerSequence, T &largerSequence);
+		static void		insertUnpaired(int &unpaired, T &largerSequence);
+		static double	stopChrono();
+		static void		showStats(double timeVectorSort, double timeDequeSort);
+		static void		printContainer(T v);
 };
+
+#include "PmergeMe.tpp"
 
 #endif
