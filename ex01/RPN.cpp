@@ -12,6 +12,8 @@ int RPN::processRPNLine(char *line)
 		getline(ss, _char, ' ');
 		if ( _char.size() == 1 && std::strchr("+*-/", _char[0]) != NULL )
 			executeOperation(_char[0]);
+		else if (_char == "")
+			;
 		else
 			insertNumber(_char);
 	}
