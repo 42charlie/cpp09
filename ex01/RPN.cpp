@@ -1,6 +1,6 @@
 #include "RPN.hpp"
 
-std::stack<int> RPN::stack;
+std::stack<int, std::list<int> > RPN::stack;
 
 int RPN::processRPNLine(char *line)
 {

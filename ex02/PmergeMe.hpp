@@ -14,11 +14,17 @@ template <typename T>
 class PmergeMe{
 	private :
 		static clock_t	start;
-		static T		unsortedSequence;
-	public :
 		static int		unpaired;
 		static T		largerElements;
 		static T		smallerElements;
+		static T		unsortedSequence;
+
+		//Orthodox Canonical Form
+		PmergeMe();
+		PmergeMe(PmergeMe const &copy);
+		PmergeMe &operator=(PmergeMe const &copy);
+		~PmergeMe();
+	public :
 		static double	mergeSort(char **argv);
 		static void		getSequence(char **args);
 		static void		pairElements();

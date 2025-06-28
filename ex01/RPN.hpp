@@ -4,13 +4,14 @@
 #include <cstring> //for strchr
 #include <string>
 #include <stack>
+#include <list>
 
 #ifndef _RPN_
 #define _RPN_
 
 class RPN{
 	private:
-		static std::stack<int> stack;
+		static std::stack<int, std::list<int> > stack;
 
 		RPN(void);
 		RPN(const RPN &copy);

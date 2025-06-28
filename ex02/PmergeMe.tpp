@@ -1,4 +1,3 @@
-
 template <typename T>
 clock_t	PmergeMe<T>::start;
 
@@ -13,7 +12,6 @@ T		PmergeMe<T>::largerElements;
 
 template <typename T>
 int		PmergeMe<T>::unpaired;
-
 
 template <typename T>
 T PmergeMe<T>::fordjohnsonsort(T largerSequence)
