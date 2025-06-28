@@ -114,7 +114,7 @@ void BitcoinExchange::Exchange(const char *inFileName)
 		try{
 			value = BitcoinExchange::parseLine(line, '|', &date);
 			bound = getbound(date);
-			std::cout << date.getFullDate() << " => " << value << " = " << bound->second * value << "\n";
+			std::cout << date.getFullDate() << "=> " << value << " = " << bound->second * value << "\n";
 		} catch (std::exception &e)
 		{
 			std::cout << e.what() << "\n";
