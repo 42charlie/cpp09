@@ -194,7 +194,6 @@ double PmergeMe<T>::stopChrono()
 template <typename T>
 void PmergeMe<T>::showStats(double timeVectorSort, double timeDequeSort)
 {
-	std::cout << "\n";
 	std::cout << "before:\t";
 	printContainer(unsortedSequence);
 	std::cout << "\n";

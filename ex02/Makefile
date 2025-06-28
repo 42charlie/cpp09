@@ -10,7 +10,7 @@ all : $(NAME)
 $(NAME) : $(MAND_OBJS)
 	$(CC) $(FLAGS) $^ -o $@
 
-%.o : %.cpp PmergeMe.hpp
+%.o : %.cpp PmergeMe.hpp PmergeMe.tpp
 	$(CC) $(FLAGS) -c $< -o $@
 
 clean:
