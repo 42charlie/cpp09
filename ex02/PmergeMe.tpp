@@ -16,65 +16,66 @@ int		PmergeMe<T>::unpaired;
 template <typename T>
 T PmergeMe<T>::fordjohnsonsort(T largerSequence)
 {
-	int	_unpaired = -1;
-	T	smaller_elements;
-	T	larger_elements;
+	T		larger_elements;
+	T		smaller_elements;
+	int		_unpaired = -1;
+	size_t	largerSeqLen = largerSequence.size();
 	
 	//Base case.
-	if ( largerSequence.size() == 2 && largerSequence[0] > largerSequence[1] ) {
+	if ( largerSeqLen == 2 && largerSequence[0] > largerSequence[1] )
 		std::swap(largerSequence[0], largerSequence[1]);
-	}
-	if ( largerSequence.size() <= 2 ) {
+
+	if ( largerSeqLen <= 2 )
 		return largerSequence;
-	}
-		
-		//split larger and smaller elements.
-		for ( unsigned int i = 0; i < largerSequence.size(); i+=2 )
-		{
-			if ( i + 1 >= largerSequence.size() ) {
-				_unpaired = largerSequence[i];
-				break;
-			}
-			smaller_elements.push_back(std::min(largerSequence[i], largerSequence[i + 1]));
-			larger_elements.push_back(std::max(largerSequence[i], largerSequence[i + 1]));
+	
+	//split larger and smaller elements.
+	for ( unsigned int i = 0; i < largerSeqLen; i+=2 )
+	{
+		if ( i + 1 >= largerSeqLen ) {
+			_unpaired = largerSequence[i];
+			break;
 		}
-		
-		//recursively call the func on larger elements.
-		larger_elements = fordjohnsonsort(larger_elements);
-		
-		//inserting the smaller elements and the unpaired element.
+		smaller_elements.push_back(std::min(largerSequence[i], largerSequence[i + 1]));
+		larger_elements.push_back(std::max(largerSequence[i], largerSequence[i + 1]));
+	}
+	
+	//recursively call the func on larger elements.
+	larger_elements = fordjohnsonsort(larger_elements);
+	
+	//inserting the smaller elements and the unpaired element.
+	if (_unpaired != -1)
 		insertUnpaired(_unpaired, larger_elements);
-		insertSequence(smaller_elements, larger_elements);
-		return larger_elements;
+	insertSequence(smaller_elements, larger_elements);
+	return larger_elements;
 }
 
 template <typename T>
 void PmergeMe<T>::insertUnpaired(int &_unpaired, T &largerSequence)
 {
-	if (_unpaired != -1)
-	{
-		typename T::iterator position = std::lower_bound(largerSequence.begin(), largerSequence.end(), _unpaired);
-		largerSequence.insert(position, _unpaired);
-		_unpaired = -1;
-	}
+	typename T::iterator	position;
+	
+	position = std::lower_bound(largerSequence.begin(), largerSequence.end(), _unpaired);
+	largerSequence.insert(position, _unpaired);
+	_unpaired = -1;
 }
 
 template <typename T>
 void PmergeMe<T>::insertSequence(T &smallerSequence, T &largerSequence)
 {
-	T jacob = genJacobSeq(smallerSequence.size());
-	T inserted(smallerSequence.size(), 0);
+	int						element;
+	typename T::iterator	position;
+	T						jacob = genJacobSeq(smallerSequence.size());
+	T						inserted(smallerSequence.size(), 0);
 	
 	// Insert Jacobsthal-indexed elements
 	for (typename T::iterator it = jacob.begin(); it != jacob.end(); ++it)
 	{
-		int index = *it;
-		if (index >= (int)smallerSequence.size())
+		if (*it >= (int)smallerSequence.size())
 			continue;
-		int element = smallerSequence[index];
-		typename T::iterator pos = std::lower_bound(largerSequence.begin(), largerSequence.end(), element);
-		largerSequence.insert(pos, element);
-		inserted[index] = 1;
+		element = smallerSequence[*it];
+		position = std::lower_bound(largerSequence.begin(), largerSequence.end(), element);
+		largerSequence.insert(position, element);
+		inserted[*it] = 1;
 	}
 
 	// Insert remaining elements
@@ -82,23 +83,25 @@ void PmergeMe<T>::insertSequence(T &smallerSequence, T &largerSequence)
 	{
 		if (inserted[i])
 			continue;
-		int element = smallerSequence[i];
-		typename T::iterator pos = std::lower_bound(largerSequence.begin(), largerSequence.end(), element);
-		largerSequence.insert(pos, element);
+		element = smallerSequence[i];
+		position = std::lower_bound(largerSequence.begin(), largerSequence.end(), element);
+		largerSequence.insert(position, element);
 	}
 }
 
 template <typename T>
 T PmergeMe<T>::genJacobSeq(int n)
 {
-	T sequence;
-    int j0 = 0;
-    int j1 = 1;
+	int	next;
+	T	sequence;
+    int	j0 = 0;
+    int	j1 = 1;
+
     if (n <= 0)
 		return sequence;
     sequence.push_back(j1);
     while (true) {
-		int next = j1 + 2 * j0;
+		next = j1 + 2 * j0; //j(n) = j(n - 1) + 2 * j(n - 2)
         if (next >= n)
 			break;
 		if( std::find(sequence.begin(), sequence.end(), next) == sequence.end())
