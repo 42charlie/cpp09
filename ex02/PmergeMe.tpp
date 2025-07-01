@@ -134,7 +134,8 @@ double PmergeMe<T>::mergeSort(char **argv)
 	PmergeMe<T>::getSequence(argv);
     PmergeMe<T>::pairElements();
     PmergeMe<T>::largerElements = PmergeMe<T>::fordjohnsonsort(PmergeMe<T>::largerElements);
-    PmergeMe<T>::insertUnpaired(PmergeMe<T>::unpaired, PmergeMe<T>::largerElements);
+	if (PmergeMe<T>::unpaired != -1)
+    	PmergeMe<T>::insertUnpaired(PmergeMe<T>::unpaired, PmergeMe<T>::largerElements);
     PmergeMe<T>::insertSequence(PmergeMe<T>::smallerElements, PmergeMe<T>::largerElements);
     sortTime = PmergeMe<T>::stopChrono();
 	return sortTime;
